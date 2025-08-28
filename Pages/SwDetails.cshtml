@@ -1,0 +1,15 @@
+﻿@page "{id:int}"
+@model WebAppRazorClient.Pages.SwDetailsModel
+@{
+    ViewData["Title"] = "Sandwich Details";
+}
+
+<h1>Sandwich Details</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">@Model.SandwitchDetails.Name</h5>
+        <p class="card-text">Price: @($"{Model.SandwitchDetails.Price:C}")</p>
+        <a asp-page="/SwList" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

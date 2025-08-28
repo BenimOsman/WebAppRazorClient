@@ -1,15 +1,16 @@
 using WebAppRazorClient;
+using WebAppRazorClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-//builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+
 builder.Services.AddScoped<SandwichService>();
 
 builder.Services.AddHttpClient("SandwichAPI", httpclient =>
 {
-    httpclient.BaseAddress = new Uri("https://localhost:7281/api/Sandwich");
+    httpclient.BaseAddress = new Uri("https://localhost:7116/api/Sandwitch");
 });
 
 var app = builder.Build();

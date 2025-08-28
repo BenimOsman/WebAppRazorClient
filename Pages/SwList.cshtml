@@ -3,14 +3,9 @@
 @{
     ViewData["Title"] = "Sandwich List";
 }
-
 <h1>Sandwich List</h1>
-
-<div class="mb-3">
-    <a asp-page="/Create" class="btn btn-success">Create Sandwich</a>
-</div>
-
-<table class="table mt-2">
+<a asp-page="/SwCreate" class="btn btn-success">Create New Sandwich</a>
+<table class="table mt-5">
     <thead>
         <tr>
             <th scope="col">Name</th>
@@ -24,8 +19,11 @@
             <tr>
                 <td>@sandwich.Name</td>
                 <td>@($"{sandwich.Price:C}")</td>
+
                 <td>
-                    <form method="post" asp-page-handler="Delete" asp-route-id="@sandwich.Id">
+                    <a asp-page="/SwDetails" asp-route-id="@sandwich.Id" class="btn btn-info">Details</a>
+                    <a asp-page="/SwEdit" asp-route-id="@sandwich.Id" class="btn btn-warning">Edit</a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@sandwich.Id" style="display:inline;">
                         <button class="btn btn-danger">Delete</button>
                     </form>
                 </td>
