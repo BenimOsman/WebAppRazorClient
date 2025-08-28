@@ -1,0 +1,30 @@
+﻿@page
+@model WebAppRazorClient.Pages.CreateModel
+@{
+    ViewData["Title"] = "Create Sandwich";
+}
+
+<h1>Create Sandwich</h1>
+
+<form method="post" class="mt-4">
+    <div class="form-group">
+        <label asp-for="Sandwich.Name" class="control-label">Name</label>
+        <input asp-for="Sandwich.Name" class="form-control" placeholder="Enter sandwich name" />
+        <span asp-validation-for="Sandwich.Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-3">
+        <label asp-for="Sandwich.Price" class="control-label">Price</label>
+        <input asp-for="Sandwich.Price" class="form-control" type="number" step="0.01" placeholder="Enter price" />
+        <span asp-validation-for="Sandwich.Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mt-4">
+        <button type="submit" class="btn btn-primary">Create</button>
+        <a asp-page="/SwList" class="btn btn-secondary">Back to List</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
