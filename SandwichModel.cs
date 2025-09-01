@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;                               // Needed for JSON property
+﻿    using System.Text.Json.Serialization;                           // Needed for JSON property
 
 namespace WebAppRazorClient
 {

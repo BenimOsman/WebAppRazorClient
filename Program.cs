@@ -1,16 +1,35 @@
 using WebAppRazorClient;
-using WebAppRazorClient;
+using WebAppRazorSandwitchClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddRazorPages();
-
+builder.Services.AddSession();
 builder.Services.AddScoped<SandwichService>();
+builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddHttpClient("SandwichAPI", httpclient =>
 {
-    httpclient.BaseAddress = new Uri("https://localhost:7116/api/Sandwitch");
+    httpclient.BaseAddress = new Uri("https://localhost:7281/");
+}).ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true,
+        UseCookies = true
+    };
+});
+builder.Services.AddHttpClient<AuthService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7256/api");
+}).ConfigurePrimaryHttpMessageHandler(() =>
+{
+    return new HttpClientHandler
+    {
+        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    };
 });
 
 var app = builder.Build();
@@ -27,6 +46,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 

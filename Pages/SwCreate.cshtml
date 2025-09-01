@@ -1,15 +1,30 @@
-﻿@page "{id:int}"
-@model WebAppRazorClient.Pages.SwDetailsModel
+﻿@page
+@model WebAppRazorClient.Pages.SwCreateModel
 @{
-    ViewData["Title"] = "Sandwich Details";
+    ViewData["Title"] = "Create Sandwich";
 }
 
-<h1>Sandwich Details</h1>
+<h1>Create Sandwich</h1>
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title">@Model.SandwitchDetails.Name</h5>
-        <p class="card-text">Price: @($"{Model.SandwitchDetails.Price:C}")</p>
-        <a asp-page="/SwList" class="btn btn-secondary">Back to List</a>
+<form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="NewSandwitch.Name" class="form-label"></label>
+        <input asp-for="NewSandwitch.Name" class="form-control" />
+        <span asp-validation-for="NewSandwitch.Name" class="text-danger"></span>
     </div>
-</div>
+
+    <div class="mb-3">
+        <label asp-for="NewSandwitch.Price" class="form-label"></label>
+        <input asp-for="NewSandwitch.Price" class="form-control" />
+        <span asp-validation-for="NewSandwitch.Price" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-page="/SwList" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

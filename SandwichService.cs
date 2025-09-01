@@ -1,63 +1,40 @@
-﻿using System.Text;
-using System.Text.Json;
-using WebAppRazorClient;
+﻿// Communication bridge between the razor pages and the Web API
+
+using System.Text;                                                              // For Encoding used in JSON content if needed
+using System.Text.Json;                                                         // For JSON serialization/deserialization
+using WebAppRazorClient;                                                        // Access SandwichModel
 
 namespace WebAppRazorClient
 {
     public class SandwichService
     {
-        public SandwichService() { }
+        public SandwichService() { }                                            // Empty constructor, service can be injected if needed
 
+        // Get all sandwiches from API
         public async Task<List<SandwichModel>> GetSandwiches()
         {
             try
             {
+                // Handler to bypass SSL certificate validation (for localhost/self-signed)
                 HttpClientHandler handler = new HttpClientHandler
                 {
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 };
 
-                HttpClient client = new HttpClient(handler);
-                await using Stream stream = await client.GetStreamAsync("https://localhost:7281/api/Sandwich");
+                using HttpClient client = new HttpClient(handler);      // HTTP client instance
+                await using Stream stream = await client.GetStreamAsync("https://localhost:7281/api/Sandwich");  // Fetch stream from API
 
-                var sandwiches = await JsonSerializer.DeserializeAsync<List<SandwichModel>>(stream);
-                return sandwiches ?? new List<SandwichModel>();
+                var sandwiches = await JsonSerializer.DeserializeAsync<List<SandwichModel>>(stream);  // Deserialize JSON into List<SandwichModel>
+                return sandwiches ?? new List<SandwichModel>();       // Return empty list if null
             }
             catch (Exception ex)
             {
-                // Consider logging the exception here
+                // Log or handle the exception if needed
                 throw;
             }
         }
-        //public async Task<SandwitchModel> GetSandwichByIdAsync(int id)
-        //{
-        //    HttpClient client = new HttpClient();
-        //    var response = await client.GetAsync("https://localhost:7281/api/Sandwich");
-        //    response.EnsureSuccessStatusCode();
-        //    var stream = await response.Content.ReadAsStreamAsync();
-        //    return await JsonSerializer.DeserializeAsync<SandwitchModel>(stream);
-        //}
 
-        //add sandwitch function    
-        //public async Task<SandwitchModel> AddSandwitch(SandwitchModel sandwitch)
-        //{
-        //    try
-        //    {
-        //        HttpClientHandler handler = new HttpClientHandler
-        //        {
-        //            ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
-        //        };
-        //        using HttpClient client = new HttpClient(handler);
-        //        var response = await client.PostAsJsonAsync("https://localhost:7281/api/Sandwich", sandwitch);
-        //        //response.EnsureSuccessStatusCode();
-        //        var createsandwitch = await response.Content.ReadFromJsonAsync<SandwitchModel>();
-        //        return createsandwitch;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw;
-        //    }
-        //}
+        // Add a new sandwich
         public async Task<SandwichModel?> AddSandwitch(SandwichModel sandwitch)
         {
             try
@@ -67,33 +44,27 @@ namespace WebAppRazorClient
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 };
 
-                using HttpClient client = new HttpClient(handler);
-                var response = await client.PostAsJsonAsync("https://localhost:7281/api/Sandwich", sandwitch);
+                using HttpClient client = new HttpClient(handler);                        // Create HTTP client
+                var response = await client.PostAsJsonAsync("https://localhost:7281/api/Sandwich", sandwitch);  // POST sandwich data
 
-                if (!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)                                        // Check if request failed
                 {
-                    // Optionally log or inspect the error response
-                    var errorContent = await response.Content.ReadAsStringAsync();
+                    var errorContent = await response.Content.ReadAsStringAsync();          // Optional: read error message
                     Console.WriteLine($"Error: {response.StatusCode}, Content: {errorContent}");
-                    return null;
+                    return null;                                                         // Return null if failed
                 }
 
-                var createsandwitch = await response.Content.ReadFromJsonAsync<SandwichModel>();
+                var createsandwitch = await response.Content.ReadFromJsonAsync<SandwichModel>();  // Deserialize created sandwich
                 return createsandwitch;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Exception: {ex.Message}");
+                Console.WriteLine($"Exception: {ex.Message}");  // Log exception message
                 throw;
             }
         }
-        //public async Task UpdateSandwichAsync(SandwitchModel sandwich)
-        //{
-        //    HttpClient client = new HttpClient();
-        //    var content = new StringContent(JsonSerializer.Serialize(sandwich), Encoding.UTF8, "application/json");
-        //    var response = await client.PutAsync("https://localhost:7281/api/Sandwich", content);
-        //    response.EnsureSuccessStatusCode();
-        //}
+
+        // Get sandwich by ID
         public async Task<SandwichModel?> GetSandwitchByIdAsync(int id)
         {
             try
@@ -103,29 +74,30 @@ namespace WebAppRazorClient
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 };
 
-                using HttpClient client = new HttpClient(handler);
-                var response = await client.GetAsync($"https://localhost:7281/api/Sandwich/{id}");
+                using HttpClient client = new HttpClient(handler);                    // HTTP client instance
+                var response = await client.GetAsync($"https://localhost:7281/api/Sandwich/{id}"); // GET sandwich by id
 
-                if (!response.IsSuccessStatusCode)
-                    return null;
+                if (!response.IsSuccessStatusCode) return null;                      // Return null if not found
 
-                var sandwich = await response.Content.ReadFromJsonAsync<SandwichModel>();
+                var sandwich = await response.Content.ReadFromJsonAsync<SandwichModel>(); // Deserialize sandwich
                 return sandwich;
             }
             catch (Exception)
             {
-                throw;
+                throw;  // Re-throw exception for higher-level handling
             }
         }
+
+        // Update an existing sandwich
         public async Task<bool> UpdateSandwitchAsync(SandwichModel sandwich)
         {
-            using HttpClient client = new HttpClient();
-            var response = await client.PutAsJsonAsync($"https://localhost:7281/api/Sandwich/{sandwich.Id}", sandwich);
+            using HttpClient client = new HttpClient();                             // HTTP client instance
+            var response = await client.PutAsJsonAsync($"https://localhost:7281/api/Sandwich/{sandwich.Id}", sandwich); // PUT updated data
 
-            // Just check if request succeeded
-            return response.IsSuccessStatusCode;
+            return response.IsSuccessStatusCode;                                    // Return true if update succeeded
         }
 
+        // Delete a sandwich by ID
         public async Task<bool> DeleteSandwitchAsync(int id)
         {
             try
@@ -135,14 +107,14 @@ namespace WebAppRazorClient
                     ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
                 };
 
-                using HttpClient client = new HttpClient(handler);
-                var response = await client.DeleteAsync($"https://localhost:7281/api/Sandwich/{id}");
+                using HttpClient client = new HttpClient(handler);                 // HTTP client instance
+                var response = await client.DeleteAsync($"https://localhost:7281/api/Sandwich/{id}");  // DELETE request
 
-                return response.IsSuccessStatusCode;
+                return response.IsSuccessStatusCode;                                // Return true if deletion succeeded
             }
             catch (Exception)
             {
-                throw;
+                throw;  // Re-throw exception for higher-level handling
             }
         }
     }
