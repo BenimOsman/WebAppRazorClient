@@ -4,28 +4,45 @@
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
+<h2 class="text-center mb-0">Login</h2>  <!-- Removed margin below the title -->
 
-<form method="post">
-    <div asp-validation-summary="All"></div>
+<div class="d-flex justify-content-center align-items-start" style="min-height: 100vh;">
+    <!-- Align items to the top -->
+    <div class="card" style="width: 100%; max-width: 400px;">
+        <div class="card-body p-4">
+            <!-- Reduced padding inside the card body -->
+            <form method="post">
+                <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div>
-        <label>Email</label>
-        <input asp-for="Input.Email" />
-        <span asp-validation-for="Input.Email"></span>
+                <div class="mb-3">
+                    <label asp-for="Input.Email" class="form-label"></label>
+                    <input asp-for="Input.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Password" class="form-label"></label>
+                    <input asp-for="Input.Password" type="password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Login</button>  <!-- Full width button -->
+            </form>
+
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+            }
+
+            <!-- New user link to redirect to Register page -->
+            <div class="text-center mt-3">
+                <span>New user? </span>
+                <a href="@Url.Page("/Account/Register")" class="text-primary">Register here</a>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div>
-        <label>Password</label>
-        <input asp-for="Input.Password" type="password" />
-        <span asp-validation-for="Input.Password"></span>
-    </div>
-
-    <button type="submit">Login</button>
-
-
-    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
-    {
-        <text><div style="color: red">@Model.ErrorMessage</div></text>
-    }
-</form>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

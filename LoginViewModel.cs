@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 namespace WebAppRazorSandwitchClient
 {
-
-
     public class LoginViewModel
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string Email { get; set; }                                                                   // Email Address: Required
 
         [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        [DataType(DataType.Password)]                                                                       // Specifies that Password field should be Hidden
+        public string Password { get; set; }                                                                // Password: Required
     }
 }
+

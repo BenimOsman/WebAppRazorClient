@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Sandwich List";
 }
+
 <h1>Sandwich List</h1>
 <a asp-page="/SwCreate" class="btn btn-success">Create New Sandwich</a>
 <table class="table mt-5">
@@ -14,12 +15,11 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var sandwich in await Model.SwList)
+        @foreach (var sandwich in Model.SwList)
         {
             <tr>
                 <td>@sandwich.Name</td>
                 <td>@($"{sandwich.Price:C}")</td>
-
                 <td>
                     <a asp-page="/SwDetails" asp-route-id="@sandwich.Id" class="btn btn-info">Details</a>
                     <a asp-page="/SwEdit" asp-route-id="@sandwich.Id" class="btn btn-warning">Edit</a>
@@ -30,4 +30,5 @@
             </tr>
         }
     </tbody>
+
 </table>

@@ -5,13 +5,11 @@ namespace WebAppRazorSandwitchClient.Pages.Account
 {
     public class LogoutModel : PageModel
     {
-        public IActionResult OnGet()
+        public IActionResult OnGet()                                                        // Handles GET requests for the login page
         {
-            // Clear the session on logout
-            HttpContext.Session.Clear();
-
-            // Redirect to home page after logout
-            return RedirectToPage("/Index");
+            // Clear the session data to log user out
+            HttpContext.Session.Clear();               
+            return RedirectToPage("/Account/Login");                                        // Redirect to login page
         }
     }
 }
